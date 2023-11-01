@@ -12,10 +12,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ limit: '10mb' }))
 
 const credentials = {
-	host: 'localhost',
-	user: 'user1',
-	password: 'user1',
-	database: 'predio2'
+	host: 'database-predio.crczdb8916x6.us-east-2.rds.amazonaws.com'',
+	user: 'admin',
+	password: '19802bb1p',
+	database: 'predio'
 }
 
 app.get('/', (req, res) => {
