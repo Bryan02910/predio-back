@@ -354,9 +354,9 @@ app.post('/api/citas/crearR', (req, res) => {
 });
 /////////////////////////////////////////////////////////////////
 app.post('/api/citas/crearV', (req, res) => {
-    const { id, nombre, auto, fecha } = req.body;
+    const { nombre, auto, fecha } = req.body;
     var connection = mysql.createConnection(credentials);
-    connection.query('INSERT INTO ventas (id, nombre, auto, fecha) VALUES (?, ?, ?, ?)', [id, nombre, auto, fecha], (err, result) => {
+    connection.query('INSERT INTO ventas (nombre, auto, fecha) VALUES (?, ?, ?)', [nombre, auto, fecha], (err, result) => {
         if (err) {
             res.status(500).send(err);
         } else {
