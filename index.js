@@ -368,17 +368,53 @@ app.post('/api/citas/crearR', (req, res) => {
 });
 /////////////////////////////////////////////////////////////////
 app.post('/api/citas/crearV', (req, res) => {
-    const { nombre, auto, fecha } = req.body;
-    var connection = mysql.createConnection(credentials);
-    connection.query('INSERT INTO ventas (nombre, auto, fecha) VALUES (?, ?, ?)', [nombre, auto, fecha], (err, result) => {
+  const { nombre, auto, fecha } = req.body;
+  var connection = mysql.createConnection(credentials);
+  
+  connection.beginTransaction((err) => {
+    if (err) {
+      res.status(500).send(err);
+      connection.end();
+      return;
+    }
+  
+    // Inserta el registro en la tabla 'ventas'
+    connection.query(
+      'INSERT INTO ventas (nombre, auto, fecha) VALUES (?, ?, ?)',
+      [nombre, auto, fecha],
+      (err, result) => {
         if (err) {
+          connection.rollback(() => {
             res.status(500).send(err);
+            connection.end();
+          });
         } else {
-            res.status(200).send({ "status": "success", "message": "Cita creada" });
+          // Llama al procedimiento almacenado 'EliminarCitaDespuesInsert' con el ID del registro insertado
+          connection.query('CALL EliminarCitaDespuesInsert(?)', [auto], (err) => {
+            if (err) {
+              connection.rollback(() => {
+                res.status(500).send(err);
+                connection.end();
+              });
+            } else {
+              connection.commit((err) => {
+                if (err) {
+                  connection.rollback(() => {
+                    res.status(500).send(err);
+                  });
+                } else {
+                  res.status(200).send({ "status": "success", "message": "Cita creada" });
+                }
+                connection.end();
+              });
+            }
+          });
         }
-        connection.end();
-    });
+      }
+    );
+  });
 });
+
 
 app.post('/api/citas/editar', (req, res) => {
     const { id, nombre, correo, telefono, mensaje, auto } = req.body;
