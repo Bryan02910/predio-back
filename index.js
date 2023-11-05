@@ -296,6 +296,20 @@ app.get('/api/citas2', (req, res) => {
     });
 });
 
+app.post('/api/reg/eliminar', (req, res) => {
+    const { id } = req.body;
+    var connection = mysql.createConnection(credentials);
+    connection.query('DELETE FROM ventas WHERE id = ?', id, (err, result) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send({ "status": "success", "message": "venta eliminada" });
+        }
+    });
+    connection.end();
+});
+
+
 app.get('/api/reg', (req, res) => {
     var connection = mysql.createConnection(credentials);
 
