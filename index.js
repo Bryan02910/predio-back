@@ -177,7 +177,7 @@ app.post('/api/marca/eliminar', (req, res) => {
 
 app.post('/api/marca/guardar', (req, res) => {
     const { id, marca } = req.body;
-    const params = [[id, Marca]];
+    const params = [[id, marca]];
     var connection = mysql.createConnection(credentials);
     connection.query('INSERT INTO marca (id, marca) VALUES ?', [params], (err, result) => {
         if (err) {
@@ -190,8 +190,8 @@ app.post('/api/marca/guardar', (req, res) => {
 });
 
 app.post('/api/marca/editar', (req, res) => {
-    const { id, Marca } = req.body;
-    const params = [Marca, id];
+    const { id, marca } = req.body;
+    const params = [marca, id];
     var connection = mysql.createConnection(credentials);
     connection.query('UPDATE marca SET marca = ? WHERE id = ?', params, (err, result) => {
         if (err) {
