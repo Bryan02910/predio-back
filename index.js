@@ -48,7 +48,7 @@ app.post('/api/login', (req, res) => {
         if (isMatch) {
           // Ahora que el usuario está autenticado, puedes verificar su rol
           const { rol } = user;
-          if (rol === 'vendedor') {
+          if (rol === 'Vendedor') {
             // El usuario es un vendedor, redirige a la vista de vendedor
             res.status(200).send({
               "id": user.id,
