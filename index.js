@@ -460,6 +460,18 @@ app.get('/api/vehiculos', (req, res) => {
     connection.end();
 });
 
+app.get('/api/vehiculos2', (req, res) => {
+    var connection = mysql.createConnection(credentials);
+    connection.query('SELECT * FROM vehiculo WHERE estado <> "vendido"', (err, rows) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.status(200).send(rows);
+        }
+    });
+    connection.end();
+});
+
 
 app.post('/api/eliminar/vehiculo', (req, res) => {
     const { id } = req.body;
