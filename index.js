@@ -23,63 +23,47 @@ app.get('/', (req, res) => {
 })
 
 app.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
-  const values = [username];
-  var connection = mysql.createConnection(credentials);
+	const { username, password } = req.body;
+	const values = [username];
+	var connection = mysql.createConnection(credentials);
 
-  connection.query("SELECT * FROM usuarios WHERE username = ?", values, (err, result) => {
-    if (err) {
-      res.status(500).send(err);
-      connection.end();
-      return;
-    }
+	connection.query("SELECT * FROM usuarios WHERE username = ?", values, (err, result) => {
+		if (err) {
+			res.status(500).send(err);
+			connection.end();
+			return;
+		}
 
-    if (result.length > 0) {
-      const user = result[0];
+		if (result.length > 0) {
+			const user = result[0];
 
-      // Comparar la contraseña proporcionada con el hash almacenado
-      bcrypt.compare(password, user.password, (compareErr, isMatch) => {
-        if (compareErr) {
-          res.status(500).send(compareErr);
-          connection.end();
-          return;
-        }
+			// Comparar la contraseña proporcionada con el hash almacenado
+			bcrypt.compare(password, user.password, (compareErr, isMatch) => {
+				if (compareErr) {
+					res.status(500).send(compareErr);
+					connection.end();
+					return;
+			 }
 
-        if (isMatch) {
-          // Ahora que el usuario está autenticado, puedes verificar su rol
-          const { rol } = user;
-          if (rol === 'Vendedor') {
-            // El usuario es un vendedor, redirige a la vista de vendedor
-            res.status(200).send({
-              "id": user.id,
-              "user": user.user,
-              "username": user.username,
-              "picture": user.picture,
-              "isAuth": true,
-              "rol": user.rol
-            });
-          } else {
-            // El usuario no es un vendedor, redirige a otra vista
-            res.status(200).send({
-              "id": user.id,
-              "user": user.user,
-              "username": user.username,
-              "picture": user.picture,
-              "isAuth": true,
-              "rol": user.rol
-            });
-          }
-        } else {
-          res.status(400).send('Credenciales incorrectas');
-        }
+				if (isMatch) {
+					res.status(200).send({
+						"id": user.id,
+						"user": user.user,
+						"username": user.username,
+						"picture": user.picture,
+						"isAuth": true
+					});
+				} else {
+					res.status(400).send('Credenciales incorrectas');
+				}
 
-        connection.end();
-      });
-    } else {
-      res.status(400).send('Usuario no existe');
-      connection.end();
-    }
-  });
+				connection.end();
+			});
+		} else {
+			res.status(400).send('Usuario no existe');
+			connection.end();
+		}
+	});
 });
 
 
