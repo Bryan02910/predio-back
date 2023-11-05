@@ -176,7 +176,7 @@ app.post('/api/marca/eliminar', (req, res) => {
 });
 
 app.post('/api/marca/guardar', (req, res) => {
-    const { id, Marca } = req.body;
+    const { id, marca } = req.body;
     const params = [[id, Marca]];
     var connection = mysql.createConnection(credentials);
     connection.query('INSERT INTO marca (id, marca) VALUES ?', [params], (err, result) => {
