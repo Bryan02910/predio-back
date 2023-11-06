@@ -11,6 +11,7 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json({ limit: '10mb' }))
 
+
 const credentials = {
 	host: 'database-predio.crczdb8916x6.us-east-2.rds.amazonaws.com',
 	user: 'admin',
